@@ -449,6 +449,7 @@
     <None Include="..\..\INSTALL" />
     <None Include="..\..\NEWS" />
     <None Include="..\..\README" />
+    <None Include="..\..\src\mangosd\mangosd.conf.dist.in" />
     <None Include="..\..\THANKS" />
     <None Include="..\..\WARNING" />
   </ItemGroup>
