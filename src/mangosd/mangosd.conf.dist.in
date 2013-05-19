@@ -42,7 +42,7 @@ ConfVersion=2010100901
 #    CharacterDatabaseConnections
 #         Amount of connections to database which will be used for SELECT queries. Maximum 16 connections per database.
 #         Please, note, for data consistency only one connection for each database is used for transactions and async SELECTs.
-#         So formula to find out how many connections will be established: X = 筥connections + 1
+#         So formula to find out how many connections will be established: X = _connections + 1
 #         Default: 1 connection for SELECT statements
 #
 #    MaxPingTime
@@ -1692,16 +1692,12 @@ Warden.ClientResponseDelay  = 90
 Warden.ClientCheckHoldOff   = 15
 
 ###################################################################################################################
-#                                                                                                                 #
-#                                            魔兽服务端自定义配置                                                  #
-#                                                                                                                 #
-###################################################################################################################
-
-###################################################################################################################
-#    决斗复位系统
-#        玩家决斗后技能和生命蓝全部重置
-#        默认: 0 (关闭)
-#              1 (开启)
-###################################################################################################################
-
+#                                               The custom
+###################################################################################################################                                                
+#   DuelMod
+#        Players will get full health and cooldowns resetted after each duel
+#        Default: 0 (false)
+#                 1 (true)                                               
+###################################################################################################################     
+                                               
 DuelMod = 0
