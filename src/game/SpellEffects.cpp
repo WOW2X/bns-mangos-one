@@ -3455,6 +3455,12 @@ void Spell::EffectDispel(SpellEffectIndex eff_idx)
     if (!unitTarget)
         return;
 
+    if (unitTarget->IsHostileTo(m_caster))
+    {
+        m_caster->SetInCombatWith(unitTarget);
+        unitTarget->SetInCombatWith(m_caster);
+    }
+
     // Fill possible dispel list
     std::list <std::pair<SpellAuraHolder* , uint32> > dispel_list;
 
@@ -3483,6 +3489,11 @@ void Spell::EffectDispel(SpellEffectIndex eff_idx)
             dispel_list.push_back(std::pair<SpellAuraHolder* , uint32>(holder, holder->GetStackAmount()));
         }
     }
+
+    // don't allow dispeling more times than buff count
+    if (damage > dispel_list.size())
+        damage = dispel_list.size();
+
     // Ok if exist some buffs for dispel try dispel it
     if (!dispel_list.empty())
     {
