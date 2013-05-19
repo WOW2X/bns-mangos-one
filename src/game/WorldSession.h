@@ -770,6 +770,7 @@ private:
     WardenBase *m_Warden;
 
     time_t _logoutTime;
+	time_t timeLastWhoCommand;
     bool m_inQueue;                                     // session wait in auth.queue
     bool m_playerLoading;                               // code processed in LoginPlayer
     bool m_playerLogout;                                // code processed in LogoutPlayer
