@@ -2381,6 +2381,8 @@ protected:
     uint32 m_anti_alarmcount;       //alarm counter
     uint32 m_anti_TeleTime;
     bool m_CanFly;
+    uint32 m_anti_justjumped;       //Jump already began, anti air jump check
+    float  m_anti_jumpbase;         //AntiGravitation
 
 
     // Transports
