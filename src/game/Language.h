@@ -1022,6 +1022,8 @@ enum MangosStrings
 
     // Broadcaster
     LANG_AUTO_BROADCAST                 = 11000,
+
+    LANG_ANNOUNCE_CHEAT                 = 11001,
     // Use for custom patches             11000-11999
 
     // NOT RESERVED IDS                   12000-1999999999
