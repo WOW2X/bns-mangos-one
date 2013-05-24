@@ -280,6 +280,8 @@ void BattleGroundAV::StartingEventCloseDoors()
 
 void BattleGroundAV::StartingEventOpenDoors()
 {
+	UpdateWorldState(BG_AV_SHOW_H_SCORE, WORLD_STATE_ADD);
+    UpdateWorldState(BG_AV_SHOW_A_SCORE, WORLD_STATE_ADD);
     OpenDoorEvent(BG_EVENT_DOOR);
 }
 
