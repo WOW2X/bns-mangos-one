@@ -1824,3 +1824,13 @@ Anticheat.Movement.BanTime = 60
 Anticheat.Movement.MaxXYT = 0.04
 Anticheat.Movement.IgnoreSecAfterTeleport = 10
 Anticheat.Movement.GmLevel = 0
+
+###################################################################################################################
+#   
+#  RATE_XP_PETKILL
+#
+#    Default:1     
+#
+###################################################################################################################
+
+Rate.XP.PetKill = 1
