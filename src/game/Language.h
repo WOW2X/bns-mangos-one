@@ -1020,6 +1020,8 @@ enum MangosStrings
     // Use for not-in-official-sources patches
     //                                    10000-10999
 
+	//instance
+    LANG_INSTANCE_RAID_GROUP_ONLY       = 5007,
     // Broadcaster
     LANG_AUTO_BROADCAST                 = 11000,
 

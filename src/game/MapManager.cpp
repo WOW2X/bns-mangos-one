@@ -27,6 +27,7 @@
 #include "CellImpl.h"
 #include "Corpse.h"
 #include "ObjectMgr.h"
+#include "Language.h"
 
 #define CLASS_LOCK MaNGOS::ClassLevelLockable<MapManager, ACE_Recursive_Thread_Mutex>
 INSTANTIATE_SINGLETON_2(MapManager, CLASS_LOCK);
@@ -175,7 +176,7 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
                 {
                     // probably there must be special opcode, because client has this string constant in GlobalStrings.lua
                     // TODO: this is not a good place to send the message
-                    player->GetSession()->SendAreaTriggerMessage("You must be in a raid group to enter %s instance", mapName);
+                    player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetMangosString(LANG_INSTANCE_RAID_GROUP_ONLY), mapName);
                     DEBUG_LOG("MAP: Player '%s' must be in a raid group to enter instance of '%s'", player->GetName(), mapName);
                     return false;
                 }
