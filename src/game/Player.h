@@ -2374,6 +2374,7 @@ protected:
     //////////////////// Rest System/////////////////////
     //movement anticheat
     uint32 m_anti_lastmovetime;     //last movement time
+	float  m_anti_last_hspeed;      //horizontal speed, default RUN speed
     float  m_anti_MovedLen;         //Length of traveled way
     uint32 m_anti_NextLenCheck;
     float  m_anti_BeginFallZ;    //alternative falling begin

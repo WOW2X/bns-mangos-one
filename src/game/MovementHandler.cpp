@@ -464,7 +464,19 @@ void WorldSession::HandleMovementOpcodes(WorldPacket& recv_data)
         plMover->m_anti_jumpbase = 0;
         plMover->HandleFall(movementInfo);
     }
-
+    
+  if(plMover)
+   {
+    //calc time deltas
+   int32 timedelta = 1500;
+   if (plMover->m_anti_lastmovetime !=0){
+       timedelta = movementInfo.time - plMover->m_anti_lastmovetime;
+       plMover->m_anti_lastmovetime = movementInfo.time;
+   } 
+   else 
+   {
+       plMover->m_anti_lastmovetime = movementInfo.time;
+   }
     // ---- anti-cheat features -->>>
     uint32 Anti_TeleTimeDiff=plMover ? time(NULL) - plMover->Anti__GetLastTeleTime() : time(NULL);
     static const uint32 Anti_TeleTimeIgnoreDiff=sWorld.GetMvAnticheatIgnoreAfterTeleport();
@@ -478,13 +490,17 @@ void WorldSession::HandleMovementOpcodes(WorldPacket& recv_data)
         {
             GetPlayer()->m_anti_alarmcount = 0;
         }
-        /* I really don't care about movement-type yet (todo)
-        UnitMoveType move_type;
- 
-        if (movementInfo.flags & MOVEMENTFLAG_FLYING) move_type = MOVE_FLY;
-        else if (movementInfo.flags & MOVEMENTFLAG_SWIMMING) move_type = MOVE_SWIM;
-        else if (movementInfo.flags & MOVEMENTFLAG_WALK_MODE) move_type = MOVE_WALK;
-        else move_type = MOVE_RUN;*/
+
+	    UnitMoveType move_type;
+
+        if (plMover->HasMovementFlag(MOVEFLAG_FLYING2)) move_type = plMover->HasMovementFlag(MOVEFLAG_BACKWARD) ? MOVE_FLIGHT_BACK : MOVE_FLIGHT;
+        else if (plMover->HasMovementFlag(MOVEFLAG_SWIMMING)) move_type = plMover->HasMovementFlag(MOVEFLAG_BACKWARD) ? MOVE_SWIM_BACK : MOVE_SWIM;
+        else if (plMover->HasMovementFlag(MOVEFLAG_WALK_MODE)) move_type = MOVE_WALK;
+        //hmm... in first time after login player has MOVE_SWIMBACK instead MOVE_WALKBACK
+        else move_type = plMover->HasMovementFlag(MOVEFLAG_BACKWARD) ? MOVE_SWIM_BACK : MOVE_RUN;
+
+        float allowed_delta = 0;
+        float current_speed = plMover->GetSpeed(move_type);
  
         float delta_x = GetPlayer()->GetPositionX() - movementInfo.GetPos()->x;
         float delta_y = GetPlayer()->GetPositionY() - movementInfo.GetPos()->y;
@@ -505,6 +521,15 @@ void WorldSession::HandleMovementOpcodes(WorldPacket& recv_data)
         {
             tg_z = ((delta !=0.0f) && (delta_z > 0.0f)) ? (atan((delta_z*delta_z) / delta) * 180.0f / M_PI) : 0.0f;
         }
+
+        float time_delta = (timedelta < 1500) ? (float)timedelta/1000 : 1.5f;
+
+        if (current_speed < GetPlayer()->m_anti_last_hspeed)
+            allowed_delta = GetPlayer()->m_anti_last_hspeed;
+        else 
+        allowed_delta = current_speed;
+        allowed_delta = allowed_delta * time_delta;
+        allowed_delta = allowed_delta * allowed_delta + 2;
 
         //antiOFF fall-damage, MOVEMENTFLAG_UNK4 seted by client if player try movement when falling and unset in this case the MOVEMENTFLAG_FALLING flag. 
         if((!GetPlayer()->CanFly() && GetPlayer()->m_anti_BeginFallZ == INVALID_HEIGHT) &&
@@ -589,6 +614,15 @@ void WorldSession::HandleMovementOpcodes(WorldPacket& recv_data)
              plMover->m_anti_justjumped = 0;
         }
 
+        if (real_delta > allowed_delta)
+        {
+            Anti__CheatOccurred(CurTime,"Speed hack",0.0f,LookupOpcodeName(opcode),0.0f,movementInfo.GetMovementFlags());
+        }
+        if ((real_delta>4900.0f) && !(real_delta < allowed_delta))
+        {
+            Anti__CheatOccurred(CurTime,"Teleport",0.0f,LookupOpcodeName(opcode),0.0f,movementInfo.GetMovementFlags());
+        }
+
         if ((movementInfo.HasMovementFlag(MOVEFLAG_FLYING) || plMover->m_movementInfo.HasMovementFlag(MOVEFLAG_FLYING2)) && !plMover->CanFly() && !plMover->isGameMaster() && (opcode!=201))// && !(plMover->HasAuraType(SPELL_AURA_FLY) || plMover->HasAuraType(SPELL_AURA_MOD_INCREASE_FLIGHT_SPEED)))
         {
             Anti__CheatOccurred(CurTime,"Fly hack",0.0f,LookupOpcodeName(opcode),0.0f,movementInfo.GetMovementFlags());
@@ -623,6 +657,7 @@ void WorldSession::HandleMovementOpcodes(WorldPacket& recv_data)
         }
     } 
     // <<---- anti-cheat features
+}
 
     /* process position-change */
     HandleMoverRelocation(movementInfo);

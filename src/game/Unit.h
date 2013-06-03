@@ -683,7 +683,7 @@ public:
     };
 
     JumpInfo const& GetJumpInfo() const { return jump; }
-private:
+  //private:
     // common
     uint32   moveFlags;                                 // see enum MovementFlags
     uint8    moveFlags2;

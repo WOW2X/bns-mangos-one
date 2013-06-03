@@ -500,6 +500,7 @@ Player::Player(WorldSession* session): Unit(), m_mover(this), m_camera(this), m_
     //////////////////// Rest System/////////////////////
     //movement anticheat
     m_anti_lastmovetime = 0;   //last movement time
+	m_anti_last_hspeed = 7.0f;       //horizontal speed, default RUN speed
     m_anti_NextLenCheck = 0;
     m_anti_MovedLen = 0.0f;
     m_anti_BeginFallZ = INVALID_HEIGHT;
